@@ -2,6 +2,10 @@ package it.prova.migrationcsv.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.prova.migrationcsv.model.Assicurato;
 
@@ -26,7 +30,7 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 			st.setDate(4, new java.sql.Date(input.parseDate(input.getDataNascita()).getTime()));
 			st.setInt(5, input.getNuoviSinistri());
 			st.setString(6, input.getCodiceFiscale());
-			st.executeUpdate();
+			result = st.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -46,13 +50,32 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 				"INSERT INTO not_processed(codice_fiscale, old_id) VALUES (?, ?);")) {				
 			st.setString(1, input.getCodiceFiscale());
 			st.setLong(2, input.getId());
-			st.executeUpdate();
+			result = st.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 		}
 		return result;
 	}
-
-
+	
+	public List<Assicurato> listAll()throws Exception{
+		List<Assicurato> result = new ArrayList<Assicurato>();
+		Assicurato holderTemp = null;
+		try(Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("select * from assicurato; ");){
+			
+			while (rs.next()) {
+				holderTemp = new Assicurato();
+				holderTemp.setId(rs.getLong("id"));
+				holderTemp.setNome(rs.getString("nome"));
+				holderTemp.setCognome(rs.getString("cognome"));
+				holderTemp.setDataNascita(rs.getDate("datanascita").toString());
+				holderTemp.setCodiceFiscale(rs.getString("codice_fiscale"));
+				holderTemp.setNuoviSinistri(rs.getInt("sinistri"));
+				result.add(holderTemp);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

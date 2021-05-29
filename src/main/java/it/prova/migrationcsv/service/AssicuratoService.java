@@ -1,6 +1,8 @@
 package it.prova.migrationcsv.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +14,22 @@ import it.prova.migrationcsv.model.Assicurato;
 public class AssicuratoService {
 	
 	 AssicuratoDAO assicuratodao= new AssicuratoDAO();
+	 
+	 public List<Assicurato> ListAll()throws Exception{
+		 
+		 List<Assicurato> result = new ArrayList<>();
+		 try(Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL_NEWSCHEMA)) {
+			
+			 this.assicuratodao.setConnection(connection);
+			 result= assicuratodao.listAll();
+			 
+		 } catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+		 
+		return result;
+	}
 	
 	public int inserisciNuovo(Assicurato input) throws Exception {
 		if (input == null)
@@ -23,8 +41,10 @@ public class AssicuratoService {
 			this.assicuratodao.setConnection(connection);
 			
 			if(validaAssicurati(input)) {
+				System.out.println("validazione ok : inserimento in Assicurato");
 				result= assicuratodao.insert(input);
 			}else {
+				System.out.println("attenzione ci sono errori di validazione : inserimento in not_processed");
 				result= assicuratodao.insertNotProcessed(input);
 			}
 			
