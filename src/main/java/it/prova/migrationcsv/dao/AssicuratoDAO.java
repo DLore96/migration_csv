@@ -23,8 +23,7 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 			throw new Exception("Valore di input non ammesso.");
 		int result=0;
 		try (PreparedStatement st = connection.prepareStatement(
-				"INSERT INTO assicurato(id, nome, cognome, datanascita,sinistri,codice_fiscale) VALUES (?, ?, ?, ?, ?, ?);")) {
-			st.setLong(1, input.getId());
+				"INSERT INTO assicurato( nome, cognome, datanascita,sinistri,codice_fiscale) VALUES (?, ?, ?, ?, ?);")) {
 			st.setString(2, input.getNome());
 			st.setString(3, input.getCognome());
 			st.setDate(4, new java.sql.Date(input.parseDate(input.getDataNascita()).getTime()));
