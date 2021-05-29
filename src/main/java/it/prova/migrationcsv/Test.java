@@ -1,10 +1,6 @@
 package it.prova.migrationcsv;
 
 import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,12 +8,12 @@ import java.util.List;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import it.prova.migrationcsv.connection.MyConnection;
 import it.prova.migrationcsv.model.Assicurato;
+import it.prova.migrationcsv.service.AssicuratoService;
 
 public class Test {
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws Exception {
 
 		System.out.println("avvio lettura file:");
 		String nomeFile="C:\\Users\\asus\\Desktop\\file csv\\prova.csv";
@@ -35,7 +31,10 @@ public class Test {
 			 
 			 //INSERIMENTO IN TABELLA ASSICURATO:
 			 System.out.println("Ora inseriamolo nella base dati:");
-				try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL_NEWSCHEMA);
+			 
+			 AssicuratoService assicuratoService= new AssicuratoService();
+			 assicuratoService.inserisciNuovo(app);
+				/*try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL_NEWSCHEMA);
 						PreparedStatement st = connection.prepareStatement(
 						"INSERT INTO assicurato(id, nome, cognome, datanascita,sinistri,codice_fiscale) VALUES (?, ?, ?, ?, ?, ?);")) {
 					st.setLong(1, app.getId());
@@ -48,7 +47,7 @@ public class Test {
 				} catch (Exception e) {
 					e.printStackTrace();
 					
-				}
+				}*/
 		}
 		
 		
