@@ -24,11 +24,11 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 		int result=0;
 		try (PreparedStatement st = connection.prepareStatement(
 				"INSERT INTO assicurato( nome, cognome, datanascita,sinistri,codice_fiscale) VALUES (?, ?, ?, ?, ?);")) {
-			st.setString(2, input.getNome());
-			st.setString(3, input.getCognome());
-			st.setDate(4, new java.sql.Date(input.parseDate(input.getDataNascita()).getTime()));
-			st.setInt(5, input.getNuoviSinistri());
-			st.setString(6, input.getCodiceFiscale());
+			st.setString(1, input.getNome());
+			st.setString(2, input.getCognome());
+			st.setDate(3, new java.sql.Date(input.parseDate(input.getDataNascita()).getTime()));
+			st.setInt(4, input.getNuoviSinistri());
+			st.setString(5, input.getCodiceFiscale());
 			result = st.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
