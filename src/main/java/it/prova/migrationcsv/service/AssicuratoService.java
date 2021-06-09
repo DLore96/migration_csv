@@ -10,6 +10,7 @@ import it.prova.migrationcsv.Constants;
 import it.prova.migrationcsv.connection.MyConnection;
 import it.prova.migrationcsv.dao.AssicuratoDAO;
 import it.prova.migrationcsv.model.Assicurato;
+import it.prova.migrationcsv.model.NotProcessedAssicurato;
 
 public class AssicuratoService {
 	
@@ -56,18 +57,34 @@ public class AssicuratoService {
 		return result;
 	}
 	
+ public List<NotProcessedAssicurato> ListNotProcessed()throws Exception{
+		 
+		 List<NotProcessedAssicurato> result = new ArrayList<>();
+		 try(Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL_NEWSCHEMA)) {
+			
+			 this.assicuratodao.setConnection(connection);
+			 result= assicuratodao.listAllNotProcessed();
+			 
+		 } catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} 
+		 
+		return result;
+	}
+	
 	private static boolean validaAssicurati(Assicurato assicuratoItem) {
 		
 		if(StringUtils.isBlank(assicuratoItem.getNome()) || 
 				StringUtils.isBlank(assicuratoItem.getCognome()) ||
 				StringUtils.isBlank(assicuratoItem.getCodiceFiscale()) ||
 				assicuratoItem.getCodiceFiscale().length()!=16 ||
-				StringUtils.isBlank(assicuratoItem.getDataNascita()) ||
+				assicuratoItem.getDataNascita()==null||
 				assicuratoItem.getNuoviSinistri()==null || assicuratoItem.getNuoviSinistri()< 0 ) {
 			
 			return false;
 		}
-		return true;		
+		return true;
 	}
 	
 	

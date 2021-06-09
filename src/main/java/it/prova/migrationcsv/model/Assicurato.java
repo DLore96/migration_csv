@@ -1,45 +1,47 @@
 package it.prova.migrationcsv.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvDate;
 
 public class Assicurato {
-	
-	@CsvBindByName(column="id")
+
+	@CsvBindByName(column = "id")
 	private Long id;
-	@CsvBindByName(column="nome")
+	@CsvBindByName(column = "nome")
 	private String nome;
 	@CsvBindByName(column = "cognome")
 	private String cognome;
-	
+
+	@CsvDate(value = "yyyy-MM-dd")
 	@CsvBindByName(column = "data_nascita")
-	private String dataNascitaFromCsv;
-	
-	
+	private Date dataNascitaFromCsv;
+
 	@CsvBindByName(column = "sinistri")
 	private Integer nuoviSinistri;
 	@CsvBindByName(column = "codice_fiscale")
 	private String codiceFiscale;
-	
-public Assicurato(){}
-	
-	public Assicurato(String nome, String cognome, String dataNascita, Integer sinistri, String codiceFiscale) {
-		this.nome=nome;
-		this.cognome=cognome;
-		this.dataNascitaFromCsv=dataNascita;
-		this.codiceFiscale=codiceFiscale;
-		this.nuoviSinistri=sinistri;
+
+	public Assicurato() {
 	}
-	
-	public Assicurato(Long id, String nome, String cognome,String  dataNascita, Integer nuoviSinistri, String codiceFiscale ) {
-		this.id=id;
+
+	public Assicurato(String nome, String cognome, Date dataNascita, Integer sinistri, String codiceFiscale) {
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codiceFiscale=codiceFiscale;
-		this.nuoviSinistri=nuoviSinistri;
-		this.dataNascitaFromCsv=dataNascita;
+		this.dataNascitaFromCsv = dataNascita;
+		this.codiceFiscale = codiceFiscale;
+		this.nuoviSinistri = sinistri;
+	}
+
+	public Assicurato(Long id, String nome, String cognome, Date dataNascita, Integer nuoviSinistri,
+			String codiceFiscale) {
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codiceFiscale = codiceFiscale;
+		this.nuoviSinistri = nuoviSinistri;
+		this.dataNascitaFromCsv = dataNascita;
 	}
 
 	public Long getId() {
@@ -66,11 +68,11 @@ public Assicurato(){}
 		this.cognome = cognome;
 	}
 
-	public String getDataNascita() {
+	public Date getDataNascita() {
 		return dataNascitaFromCsv;
 	}
 
-	public void setDataNascita(String  dataNascita) {
+	public void setDataNascita(Date dataNascita) {
 		this.dataNascitaFromCsv = dataNascita;
 	}
 
@@ -92,14 +94,16 @@ public Assicurato(){}
 
 	@Override
 	public String toString() {
-		return "Assicurato [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", dataNascita=" + dataNascitaFromCsv
-				+ ", nuoviSinistri=" + nuoviSinistri + ", codiceFiscale=" + codiceFiscale + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("{id=").append(id).append(", codice_fiscale=").append(codiceFiscale).append(", nome=")
+				.append(nome).append(", cognome").append(cognome).append(", data_nascita=").append(dataNascitaFromCsv)
+				.append(", sinistri").append(nuoviSinistri).append("}");
+
+		return builder.toString();
 	}
-	
-	
-	public Date parseDate(String data) throws Exception {
-		 return new SimpleDateFormat("yyyy-MM-dd").parse(data); 
-	}
-	
+
+//	public Date parseDate(String data) throws Exception {
+//		 return new SimpleDateFormat("yyyy-MM-dd").parse(data); 
+//	}
 
 }

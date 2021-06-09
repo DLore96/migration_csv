@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.prova.migrationcsv.model.Assicurato;
+import it.prova.migrationcsv.model.NotProcessedAssicurato;
 
 public class AssicuratoDAO extends AbstractMySQLDAO{
 	
@@ -26,7 +27,7 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 				"INSERT INTO assicurato( nome, cognome, datanascita,sinistri,codice_fiscale) VALUES (?, ?, ?, ?, ?);")) {
 			st.setString(1, input.getNome());
 			st.setString(2, input.getCognome());
-			st.setDate(3, new java.sql.Date(input.parseDate(input.getDataNascita()).getTime()));
+			st.setDate(3, new java.sql.Date(input.getDataNascita().getTime()));
 			st.setInt(4, input.getNuoviSinistri());
 			st.setString(5, input.getCodiceFiscale());
 			result = st.executeUpdate();
@@ -67,9 +68,27 @@ public class AssicuratoDAO extends AbstractMySQLDAO{
 				holderTemp.setId(rs.getLong("id"));
 				holderTemp.setNome(rs.getString("nome"));
 				holderTemp.setCognome(rs.getString("cognome"));
-				holderTemp.setDataNascita(rs.getDate("datanascita").toString());
+				holderTemp.setDataNascita(rs.getDate("datanascita"));
 				holderTemp.setCodiceFiscale(rs.getString("codice_fiscale"));
 				holderTemp.setNuoviSinistri(rs.getInt("sinistri"));
+				result.add(holderTemp);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public List<NotProcessedAssicurato> listAllNotProcessed()throws Exception{
+		List<NotProcessedAssicurato> result = new ArrayList<NotProcessedAssicurato>();
+		NotProcessedAssicurato holderTemp = null;
+		try(Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("select * from not_processed; ");){
+			
+			while (rs.next()) {
+				holderTemp = new NotProcessedAssicurato();
+				holderTemp.setId(rs.getLong("id"));
+				holderTemp.setCodiceFiscale(rs.getString("codice_fiscale"));
+				holderTemp.setOldId(rs.getLong("old_id"));
 				result.add(holderTemp);
 			}
 		}catch(Exception e) {
